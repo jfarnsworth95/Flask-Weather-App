@@ -121,12 +121,12 @@ class api_caller():
 
 
 if __name__ == "__main__":
-    api_caller = api_caller()
+    #api_caller = api_caller()
 
-    print("//Current Weather Data")
-    print(api_caller.get_weather_today("USA", 75287, True))
-    print("")
+    #print("//Current Weather Data")
+    #print(api_caller.get_weather_today("New Zealand", 58712, True))
+    #print("")
 
-    print("//5 Day Forecast")
-    print(api_caller.get_5_day_forecast("USA", 75287, True))
-    print()
+    #print("//5 Day Forecast")
+    #print(api_caller.get_5_day_forecast("New Zealand", 58712, True))
+    #print()
