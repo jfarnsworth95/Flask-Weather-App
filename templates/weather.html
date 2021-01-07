@@ -1,0 +1,342 @@
+{% extends "base.html" %}
+{% block title %}Weather{% endblock %}
+
+{% block extraStyle %}
+<style>
+    .bg-primary{
+        background-color: #053780 !important;
+    }
+
+    .card-font-color{
+        color: #fff;
+    }
+
+    .card-body-extra{
+        min-height: 570px;
+    }
+
+    .degree-btn{
+        min-width: 70px !important;
+    }
+
+    .temp-buffer{
+        padding: 8px 0 0 0;
+    }
+
+    .center-block {
+        display: table;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .main_container{
+        overflow: auto;
+        min-width: 1300px;
+    }
+
+    .big-temp{
+        font-size: 59px;
+    }
+</style>
+
+{% if view == 2 %}
+<script type="text/javascript">
+    window.onload = function () {
+        var chart = new CanvasJS.Chart("chartContainer",
+            {
+            zoomEnabled: true,
+
+            title:{
+                text: "Expected 5 Day Temperatures"
+            },
+
+            axisX:{
+                valueFormatString: "DDD"
+            },
+
+            theme: "dark2",
+
+            gridColor: "lightgreen",
+
+            data: [{
+                type: "area",
+                xValueType: "dateTime",
+                dataPoints: [
+                    {% if unit == "metric"  %}
+                        {% for date_temp in temp_data["C"] %}
+                            { x: {{date_temp}}, y: {{temp_data["C"][date_temp]}} },
+                        {% endfor %}
+                    {% else %}
+                        {% for date_temp in temp_data["F"] %}
+                            { x: {{date_temp}}, y: {{temp_data["F"][date_temp]}} },
+                        {% endfor %}
+                    {% endif %}
+                ]
+            }]
+        });
+
+        chart.render();
+    }
+</script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+{% endif %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#view_0").click(function(){
+            $.ajax({
+                type: "POST",
+                url: "/toggle_view",
+                data: {"new_view_id": 0},
+                success: function() {
+                    location.reload();
+                }
+            });
+        });
+
+        $("#view_1").click(function(){
+            $.ajax({
+                type: "POST",
+                url: "/toggle_view",
+                data: {"new_view_id": 1},
+                success: function() {
+                    location.reload();
+                }
+            });
+        });
+
+        $("#view_2").click(function(){
+            $.ajax({
+                type: "POST",
+                url: "/toggle_view",
+                data: {"new_view_id": 2},
+                success: function() {
+                    location.reload();
+                }
+            });
+        });
+
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container main_container">
+    <!-- view_today = 0 | view_5_day = 1 -->
+    {% if view == 0 %}
+    <div class="row">
+        <div class="col-5">
+            <div class="row">
+                <div class="card bg-primary ">
+                    <div class="card-body card-font-color">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6">
+                                    {% if unit == "metric" %}
+                                    <h1 class="card-font-color temp-buffer big-temp">{{temp_data["temp_c"]["temp"]}} &#176C</h1>
+                                    {% else %}
+                                    <h1 class="card-font-color temp-buffer big-temp">{{temp_data["temp_f"]["temp"]}} &#176F</h1>
+                                    {% endif %}
+                                </div>
+                                <div class="col-1"></div>
+                                <div class="col-4">
+                                    <img src="http://openweathermap.org/img/wn/04d@2x.png">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row-4">
+                <div class="card bg-primary ">
+                    <div class="card-body card-font-color">
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-1"></div>
+                                <div class="col text-start">
+                                    <h4>Sunrise</h4>
+                                </div>
+                                <div class="col text-end">
+                                    <h4>Sunset</h4>
+                                </div>
+                                <div class="col-1"></div>
+                            </div>
+                            <div class="row">
+                                <image src="{{ url_for('static', filename='images/sunrise-sunset-icon-17.jpg') }}" />
+                            </div>
+                            <div class="row">
+                                <div class="col-1"></div>
+                                <div class="col text-start">
+                                    <h4>{{temp_data["sunrise_display"]}}</h4>
+                                </div>
+                                <div class="col text-end">
+                                    <h4>{{temp_data["sunset_display"]}}</h4>
+                                </div>
+                                <div class="col-1"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row-2">
+            </div>
+        </div>
+        <div class="col-2"></div>
+        <div class="col-4">
+            <div class="card bg-primary">
+                <div class="card-body card-font-color card-body-extra">
+                    <h4 class="text-center">{{temp_data["timestamp_display"]}}</h4>
+                    <br>
+                    <h2 class="card-title">{{temp_data["weather_condition"]}}</h2>
+                    <p>{{temp_data["weather_description"].capitalize()}}</p>
+                    <br>
+
+                    {% if unit == "metric" %}
+                    <h5>Feels Like: {{temp_data["temp_c"]["feels_like"]}} &#176C</h5>
+                    <br>
+                    <h5>High: {{temp_data["temp_c"]["temp_high"]}} &#176C</h5>
+                    <br>
+                    <h5>Low: {{temp_data["temp_c"]["temp_low"]}} &#176C</h5>
+                    {% else %}
+                    <h5>Feels Like: {{temp_data["temp_f"]["feels_like"]}} &#176F</h5>
+                    <br>
+                    <h5>High: {{temp_data["temp_f"]["temp_high"]}} &#176F</h5>
+                    <br>
+                    <h5>Low: {{temp_data["temp_f"]["temp_low"]}} &#176F</h5>
+                    {% endif %}
+                    <br>
+
+                    <h5>Humidity: {{temp_data["humidity"]}}%</h5>
+                    <br>
+
+                    {% if unit == "metric" %}
+                    <h5>Wind: {{temp_data["wind_speed"]}} m/s</h5>
+                    {% else %}
+                    <h5>Wind: {{temp_data["wind_speed"]}} miles/h</h5>
+                    {% endif %}
+                    <br>
+
+                    <h5>Cloud Coverage: {{temp_data["cloud_percent"]}}%</h5>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {% elif view == 1 %}
+    <div class="row">
+        {% for daysForecast in temp_data %}
+        <div class="col-sm">
+            <div class="card bg-primary card-body-extra">
+                <div class="row">
+                <div class="col-5">
+                    <img src="http://openweathermap.org/img/wn/{{temp_data[daysForecast]["weather_icon_id"]}}@2x.png">
+                </div>
+                <div class="col-7">
+                    {% if unit == "metric" %}
+                    <h2 class="card-title card-font-color temp-buffer">{{temp_data[daysForecast]["temp_c"]["temp"]}} &#176C</h2>
+                    {% else %}
+                    <h2 class="card-title card-font-color temp-buffer">{{temp_data[daysForecast]["temp_f"]["temp"]}} &#176F</h2>
+                    {% endif %}
+                </div>
+                </div>
+                <div class="card-body  card-font-color">
+                    <h5 class="card-title">{{temp_data[daysForecast]["weather_condition"]}}</h5>
+                    <p>{{temp_data[daysForecast]["timestamp_display"]}}</p>
+                    <br>
+                    <p>Details: {{temp_data[daysForecast]["weather_description"].capitalize()}}</p>
+
+                    {% if unit == "metric" %}
+                    <p>Feels Like: {{temp_data[daysForecast]["temp_c"]["feels_like"]}} &#176C</p>
+                    <p>High: {{temp_data[daysForecast]["temp_c"]["temp_high"]}} &#176C</p>
+                    <p>Low: {{temp_data[daysForecast]["temp_c"]["temp_low"]}} &#176C</p>
+                    {% else %}
+                    <p>Feels Like: {{temp_data[daysForecast]["temp_f"]["feels_like"]}} &#176F</p>
+                    <p>High: {{temp_data[daysForecast]["temp_f"]["temp_high"]}} &#176F</p>
+                    <p>Low: {{temp_data[daysForecast]["temp_f"]["temp_low"]}} &#176F</p>
+                    {% endif %}
+
+                    <p>Humidity: {{temp_data[daysForecast]["humidity"]}}%</p>
+
+                    {% if unit == "metric" %}
+                    <p>Wind: {{temp_data[daysForecast]["wind_speed"]}} m/s</p>
+                    {% else %}
+                    <p>Wind: {{temp_data[daysForecast]["wind_speed"]}} miles/h</p>
+                    {% endif %}
+
+                    <p>Cloud Coverage: {{temp_data[daysForecast]["cloud_percent"]}}%</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% elif view == 2 %}
+    <div class="row">
+        <div class="col">
+            <div class="card bg-primary card-body-extra">
+                <div class="card-body card-font-color">
+
+                    <div id="chartContainer" style="height: 530px; width: 100%;"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+    <br>
+    </div>
+    {% if temp_data %}
+    <div class="row">
+        <div class="col-sm">
+            <div class="row">
+                <div class="col-sm"></div>
+                <div class="col-sm">
+                    <div class="card bg-primary">
+                        <div class="card-body text-center">
+<!--                            <form action="/toggle_view">-->
+                                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                    {% if view == 0 %}
+                                    <button id="view_0" type="submit" class="btn btn-primary degree-btn" disabled >Today</button>
+                                    <button id="view_1" type="submit" class="btn btn-outline-primary degree-btn">5 Day</button>
+                                    <button id="view_2" type="submit" class="btn btn-outline-primary degree-btn">Graph</button>
+                                    {% elif view == 1 %}
+                                    <button id="view_0" type="submit" class="btn btn-outline-primary degree-btn" >Today</button>
+                                    <button id="view_1" type="submit" class="btn btn-primary degree-btn" disabled >5 Day</button>
+                                    <button id="view_2" type="submit" class="btn btn-outline-primary degree-btn">Graph</button>
+                                    {% else %}
+                                    <button id="view_0" type="submit" class="btn btn-outline-primary degree-btn" >Today</button>
+                                    <button id="view_1" type="submit" class="btn btn-outline-primary degree-btn">5 Day</button>
+                                    <button id="view_2" type="submit" class="btn btn-primary degree-btn" disabled >Graph</button>
+                                    {% endif %}
+                                </div>
+<!--                            </form>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm"></div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="card bg-primary">
+                <div class="card-body text-center">
+                    <form action="/toggle_unit">
+                        <div class="input-group center-block" role="group" aria-label="Basic outlined example">
+                            {% if unit == "metric" %}
+                            <button type="submit" class="btn btn-primary degree-btn" disabled >&#176C</button>
+                            <button type="submit" class="btn btn-outline-primary degree-btn">&#176F</button>
+                            {% else %}
+                            <button type="submit" class="btn btn-outline-primary degree-btn">&#176C</button>
+                            <button type="submit" class="btn btn-primary degree-btn" disabled >&#176F</button>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm"></div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
