@@ -2,42 +2,7 @@
 {% block title %}Weather{% endblock %}
 
 {% block extraStyle %}
-<style>
-    .bg-primary{
-        background-color: #053780 !important;
-    }
-
-    .card-font-color{
-        color: #fff;
-    }
-
-    .card-body-extra{
-        min-height: 570px;
-    }
-
-    .degree-btn{
-        min-width: 70px !important;
-    }
-
-    .temp-buffer{
-        padding: 8px 0 0 0;
-    }
-
-    .center-block {
-        display: table;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .main_container{
-        overflow: auto;
-        min-width: 1300px;
-    }
-
-    .big-temp{
-        font-size: 59px;
-    }
-</style>
+<link rel="stylesheet" type='text/css' href="{{ url_for('static', filename='css/weather.css') }}">
 
 {% if view == 2 %}
 <script type="text/javascript">

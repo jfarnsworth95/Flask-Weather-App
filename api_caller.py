@@ -5,7 +5,7 @@ class api_caller():
     # looking at the code in advance! To get your own API key (for free), go to
     # "https://home.openweathermap.org/api_keys". Sign in if you have an account, or just make one. All APIs called
     # here use the free tier as of Jan 4th 2021.
-    open_weather_api_key = ""
+    open_weather_api_key = "4634c9f1642b526f5ebe2fd35d226e29"
 
     country_ISO_3166_dic = {"Afghanistan": "AF", "Åland Islands": "AX", "Albania": "AL", "Algeria": "DZ",
                             "American Samoa": "AS", "Andorra": "AD", "Angola": "AO", "Anguilla": "AI",

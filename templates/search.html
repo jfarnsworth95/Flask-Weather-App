@@ -5,15 +5,7 @@
 <!-- Some modifications, but Search bar from W3 Schools: https://www.w3schools.com/howto/howto_js_autocomplete.asp -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-    .search_row{
-        max-width: 95% !important;
-    }
-
-    .button-holder, #search_submit{
-        margin: auto !important;
-    }
-</style>
+<link rel="stylesheet" type='text/css' href="{{ url_for('static', filename='css/search.css') }}">
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
@@ -47,7 +39,7 @@
 
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="country_span">Country</span>
-                        <input class="form-control" list="datalistOptions" id="myCountry" placeholder="Start typing for autocomplete">
+                        <input class="form-control" value="{{country_name}}" list="datalistOptions" id="myCountry" placeholder="Start typing for autocomplete">
                         <datalist id="datalistOptions">
                         <option value="Afghanistan">
                         <option value="Åland Islands">
@@ -309,7 +301,7 @@
 
                     <div class="input-group mb-3">
                       <span class="input-group-text" id="zip_span">Zip Code</span>
-                      <input type="text" class="form-control" id="myZip" placeholder="00000" aria-label="Username" aria-describedby="basic-addon1">
+                      <input type="text" class="form-control" value="{{zip_code}}" id="myZip" placeholder="00000" aria-label="Username" aria-describedby="basic-addon1">
                     </div>
 
                     <div class="input-group mb-3 button-holder">

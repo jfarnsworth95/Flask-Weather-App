@@ -1,0 +1,7 @@
+.search_row{
+    max-width: 95% !important;
+}
+
+.button-holder, #search_submit{
+    margin: auto !important;
+}
