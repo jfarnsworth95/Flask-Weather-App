@@ -66,7 +66,7 @@ class json_interpreter():
             unit = json_list["unit"]
             for json in json_list["list"]:
                 translation_dic = self.convert_current_data(json, city, None, None, unit)
-                translation_dic_collection[translation_dic["timestamp_adjusted"]] = translation_dic
+                translation_dic_collection[translation_dic["timestamp"]] = translation_dic
 
             return translation_dic_collection
 

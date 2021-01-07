@@ -74,8 +74,9 @@ def weather_home():
 
                 if interval_forecasts is not None:
                     for key in interval_forecasts.keys():
-                        if key.split("@ ")[1] == "12:00:00":
-                            temp_data[interval_forecasts[key]["timestamp_display"]] = interval_forecasts[key]
+                        if interval_forecasts[key]["timestamp_adjusted"].split("@ ")[1] == "12:00:00":
+                            print(interval_forecasts[key]["timestamp"])
+                            temp_data[interval_forecasts[key]["timestamp"]] = interval_forecasts[key]
                     session["last_update_5_day"] = datetime.datetime.now()
                     session["forecast_5_day"] = temp_data
                 else:
